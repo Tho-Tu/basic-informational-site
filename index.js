@@ -10,12 +10,14 @@ server.on("request", (request, res) => {
   const q = url.parse(request.url, true);
 
   let filename;
+  let statusCode = 200;
   if (q.pathname === "/") {
     filename = "./index.html";
   } else if (q.pathname === "/about" || q.pathname === "/contact-me") {
     filename = "." + q.pathname + ".html";
   } else {
     filename = "./404.html";
+    statusCode = 404;
   }
 
   fs.readFile(filename, (err, data) => {
@@ -23,7 +25,7 @@ server.on("request", (request, res) => {
       console.log(err);
       return;
     }
-    res.writeHead(200, { "Content-Type": "text/html" });
+    res.writeHead(statusCode, { "Content-Type": "text/html" });
     res.write(data);
     res.end();
   });
